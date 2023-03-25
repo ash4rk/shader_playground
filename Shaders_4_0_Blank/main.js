@@ -29,11 +29,15 @@ class SimonDevGLSLCourse {
     const vsh = await fetch('./shaders/vertex-shader.glsl');
     const fsh = await fetch('./shaders/fragment-shader.glsl');
 
+    const loader = new THREE.TextureLoader();
+    const dogTexture = loader.load('./textures/dog.jpg');
+
     const material = new THREE.ShaderMaterial({
       uniforms: {
         resolution: { value: new THREE.Vector2(
             window.innerWidth, window.innerHeight
-        )}
+        )},
+          diffusion: { value: dogTexture},
       },
       vertexShader: await vsh.text(),
       fragmentShader: await fsh.text()

@@ -2,6 +2,7 @@
 varying vec2 vUvs;
 
 uniform vec2 resolution;
+uniform sampler2D diffusion;
 
 vec3 red = vec3(1.0, 0.0, 0.0);
 vec3 blue = vec3(0.0, 0.0, 1.0);
@@ -36,6 +37,9 @@ void main() {
   colour = mix(white, colour, linearCurve);
   colour = mix(white, colour, smoothstepCurve);
   colour = mix(red, colour, stepCurve);
+
+  vec4 textureColour = texture(diffusion, vUvs);
+  colour *= textureColour.rgb;
 
   gl_FragColor = vec4(colour, 1.0);
 }
