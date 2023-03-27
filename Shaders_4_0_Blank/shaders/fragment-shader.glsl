@@ -10,11 +10,18 @@ vec3 white = vec3(1.0, 1.0, 1.0);
 vec3 black = vec3(0.0, 0.0, 0.0);
 vec3 yellow = vec3(1.0, 1.0, 0.0);
 
+float own_clamp(float v, float min_value, float max_value) {
+  if (v < min_value) { return min_value; }
+  if (v > max_value) { return max_value; }
+  return v;
+}
+
 void main() {
   vec3 colour = vec3(0.0);
 
   float value1 = vUvs.x;
   float value2 = smoothstep(0.0, 1.0, vUvs.x);
+//  value2 = own_clamp(vUvs.x, 0.25, 0.75);
   float value3 = step(0.5, vUvs.x);
 
   vec3 line1 = vec3(smoothstep(0.0, 0.0015, abs(vUvs.y - 0.33)));
