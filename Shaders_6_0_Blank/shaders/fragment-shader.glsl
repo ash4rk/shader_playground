@@ -1,4 +1,5 @@
 varying vec3 vNormal;
+varying vec3 vPosition;
 
 float inverseLerp(float v, float minValue, float maxValue) {
   return (v - minValue) / (maxValue - minValue);
@@ -22,6 +23,7 @@ void main() {
   vec3 baseColour = vec3(0.5);
   vec3 lighting = vec3(0.0);
   vec3 normal = normalize(vNormal);
+  vec3 viewDir = normalize(cameraPosition - vPosition);
 
   // Ambient
   vec3 ambient = vec3(0.5);
@@ -39,9 +41,16 @@ void main() {
   float dp = max(0.0, dot(lightDir, normal));
   vec3 diffuse = lightColour * dp;
 
+  // Phong specular
+  vec3 r = normalize(reflect(-lightDir, normal));
+  float phongValue = max(0.0, dot(viewDir, r));
+  phongValue = pow(phongValue, 32.0);
+
+  vec3 specular = vec3(phongValue);
+
   lighting = ambient * 0.0 + hemi * 0.5 + diffuse * 0.5;
 
-  vec3 colour = baseColour * lighting;
+  vec3 colour = baseColour * lighting + specular;
 
   //colour = linearTosRGB(colour);
   colour = pow(colour , vec3(1.0 / 2.2));
