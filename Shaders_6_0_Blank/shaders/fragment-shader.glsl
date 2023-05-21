@@ -1,3 +1,4 @@
+uniform samplerCube specMap;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
@@ -48,11 +49,23 @@ void main() {
 
   vec3 specular = vec3(phongValue);
 
-  lighting = ambient * 0.0 + hemi * 0.5 + diffuse * 0.5;
+  // IBL Specular
+  vec3 iblCoord = normalize(reflect(-viewDir, normal));
+  vec3 iblSample = textureCube(specMap, iblCoord).xyz;
+
+  specular += iblSample * 0.5;
+
+  // Fresnel
+  float fresnel = 1.0 - max(0.0, dot(viewDir, normal));
+  fresnel = pow(fresnel, 2.0);
+
+  specular *= fresnel;
+
+  lighting = ambient * 0.0 + hemi * 0.0 + diffuse * 1.0;
 
   vec3 colour = baseColour * lighting + specular;
 
-  //colour = linearTosRGB(colour);
+  colour = linearTosRGB(colour);
   colour = pow(colour , vec3(1.0 / 2.2));
 
   gl_FragColor = vec4(colour, 1.0);
