@@ -16,10 +16,11 @@ float remap(float currValue, float inMin, float inMax, float outMin, float outMa
 void main() {
   vec4 dogTexture = texture(diffuse, vUvs);
   vec3 colour = vec3(0.0);
-  float tx = sin(vUvs.x * 100.0);
-  float ty = sin(vUvs.y * 100.0);
 
-  colour = vec3(max(tx,ty));
+  float t1 = remap(sin(vUvs.y * 400.0 + time * 10.0), -1.0, 1.0, 0.8, 1.0);
+  float t2 = remap(sin(vUvs.y * 20.0 - time * 2.0), -1.0, 1.0, 0.9, 1.0);
+
+  colour = t1 * t2  * dogTexture.xyz;
 
   gl_FragColor = vec4(colour, 1.0);
 }
